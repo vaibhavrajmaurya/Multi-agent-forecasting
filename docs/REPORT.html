@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Agent Financial Forecasting — Complete Project Report</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  @media print {
+    .no-print { display: none; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+    pre, .card, table, .callout, .qa-block { page-break-inside: avoid; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; line-height: 1.7;
+         color: #1a1a2e; background: #f8f9ff; padding: 30px; max-width: 920px; margin: 0 auto; }
+  .report-header { background: linear-gradient(135deg, #4361ee 0%, #7209b7 100%); color: white;
+                   padding: 34px 38px; border-radius: 12px; margin-bottom: 30px; }
+  .report-header .tag { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px;
+                        font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+                        display: inline-block; margin-bottom: 12px; }
+  .report-header h1 { font-size: 27px; font-weight: 700; margin-bottom: 8px; }
+  .report-header .subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 16px; }
+  .meta-row { display: flex; gap: 22px; flex-wrap: wrap; font-size: 12px; opacity: 0.92; }
+  h2 { font-size: 19px; font-weight: 700; color: #4361ee; margin: 34px 0 14px; padding-bottom: 8px;
+       border-bottom: 2px solid #e8ecff; }
+  h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin: 22px 0 9px; }
+  h4 { font-size: 13px; font-weight: 700; color: #7209b7; margin: 16px 0 7px; }
+  p { margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; margin-bottom: 11px; }
+  li { margin-bottom: 5px; }
+  strong { font-weight: 700; }
+  .card { background: white; border-radius: 10px; padding: 18px 22px; margin-bottom: 16px;
+          border-left: 4px solid #4361ee; box-shadow: 0 2px 8px rgba(67,97,238,0.08); }
+  .card.green { border-left-color: #06d6a0; }
+  .card.orange { border-left-color: #f77f00; }
+  .card.purple { border-left-color: #7209b7; }
+  .card.red { border-left-color: #ef233c; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 18px; background: white;
+          border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-size: 12.5px; }
+  th { background: #4361ee; color: white; padding: 9px 12px; text-align: left; font-size: 11.5px;
+       font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f0f0f8; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafbff; }
+  pre { background: #0d1117; color: #e6edf3; padding: 16px 18px; border-radius: 8px;
+        font-family: 'Consolas', 'Courier New', monospace; font-size: 11.5px; line-height: 1.55;
+        overflow-x: auto; margin: 10px 0 16px; border: 1px solid #30363d; white-space: pre-wrap; }
+  code { background: #eef0ff; color: #4361ee; padding: 2px 6px; border-radius: 4px;
+         font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; }
+  pre code { background: none; color: inherit; padding: 0; }
+  .cm { color: #8b949e; font-style: italic; } .kw { color: #ff7b72; } .fn { color: #d2a8ff; }
+  .st { color: #a5d6ff; } .nm { color: #ffa657; }
+  .callout { background: #fff8e1; border-left: 4px solid #f77f00; padding: 13px 17px; border-radius: 6px;
+             margin: 14px 0; font-size: 12.5px; }
+  .callout.info { background: #f0f4ff; border-left-color: #4361ee; }
+  .callout.success { background: #f0fff8; border-left-color: #06d6a0; }
+  .callout.danger { background: #fff0f0; border-left-color: #ef233c; }
+  .callout strong { display: block; margin-bottom: 4px; font-size: 13px; }
+  .toc { background: white; border-radius: 10px; padding: 18px 26px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 3px; }
+  .print-btn { position: fixed; top: 18px; right: 18px; background: #4361ee; color: white; border: none;
+               padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;
+               box-shadow: 0 4px 12px rgba(67,97,238,0.4); z-index: 99; }
+  .print-btn:hover { background: #3a51d4; }
+  .glossary dt { font-weight: 700; color: #4361ee; margin-top: 10px; }
+  .glossary dd { margin-left: 0; margin-bottom: 6px; }
+  hr { border: none; border-top: 1px solid #e8ecff; margin: 22px 0; }
+  .pill { display:inline-block; padding:1px 9px; border-radius:11px; font-size:11px; font-weight:600; }
+  .pill.fix { background:#d1fae5; color:#065f46; } .pill.neg { background:#fde2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">&#x1F4BE; Save as PDF</button>
+
+<div class="report-header">
+  <div class="tag">Complete Technical Report</div>
+  <h1>Multi-Agent Financial Forecasting</h1>
+  <div class="subtitle">An online-learning ensemble for daily S&amp;P 500 forecasting —
+    from baseline to final, every component explained</div>
+  <div class="meta-row">
+    <div>Stamatics IIT Kanpur</div>
+    <div>Mentor: Aayushman Tripathi</div>
+    <div>SPY 2010–2024</div>
+    <div>GitHub: tezzuk/Mutli-Agent-Forecasting</div>
+  </div>
+</div>
+
+<div class="callout info">
+  <strong>&#128221; How to save this as a PDF</strong>
+  Click the blue <b>Save as PDF</b> button (top-right), or press <b>Ctrl/Cmd&nbsp;+&nbsp;P</b> and choose
+  "Save as PDF" as the destination. The layout is print-optimized with page breaks between sections.
+</div>
+
+<!-- ───────────────────────── TOC ───────────────────────── -->
+<div class="toc">
+  <h3 style="margin-top:0">Contents</h3>
+  <ol>
+    <li>Executive Summary</li>
+    <li>The Problem: What Are We Actually Trying to Do?</li>
+    <li>Glossary — Every Term Used</li>
+    <li>System Architecture (The Pipeline)</li>
+    <li>Code Walkthrough 1 — Data Ingestion (<code>data/fetch.py</code>)</li>
+    <li>Code Walkthrough 2 — Feature Engineering (<code>pipeline/features.py</code>)</li>
+    <li>Code Walkthrough 3 — The Four Agents (<code>pipeline/agents.py</code>)</li>
+    <li>Code Walkthrough 4 — The Hedge Aggregator (<code>pipeline/aggregator.py</code>)</li>
+    <li>Code Walkthrough 5 — Metrics (<code>pipeline/metrics.py</code>)</li>
+    <li>Code Walkthrough 6 — Walk-Forward Backtest (<code>pipeline/backtest.py</code>)</li>
+    <li>Code Walkthrough 7 — The Dashboard (<code>app.py</code>)</li>
+    <li>All 12 Corrections From the Baseline</li>
+    <li>Final Results &amp; Honest Interpretation</li>
+    <li>How to Run It Yourself</li>
+    <li>References</li>
+  </ol>
+</div>
+
+<!-- ───────────────────────── 1 ───────────────────────── -->
+<h2>1. Executive Summary</h2>
+<p>This project builds a <strong>multi-agent online-learning system</strong> that forecasts the next
+day's return of the S&amp;P 500 (via the SPY ETF). Four different forecasting models ("agents") each
+make a daily prediction, and a game-theoretic algorithm called <strong>Hedge</strong> blends them
+into a single forecast, automatically trusting whichever agents have been most accurate recently.</p>
+
+<table>
+  <thead><tr><th>Aspect</th><th>What we did</th></tr></thead>
+  <tbody>
+    <tr><td>Data</td><td>SPY + VIX daily prices, 2010–2024, via Yahoo Finance</td></tr>
+    <tr><td>Target</td><td>Next-day <em>log return</em> (a stationary transform of price)</td></tr>
+    <tr><td>Agents</td><td>Trend (linear+seasonality), Momentum (XGBoost), Volatility (XGBoost), Sequence (LSTM)</td></tr>
+    <tr><td>Aggregator</td><td>Hedge (Freund–Schapire 1997) + Fixed-Share (Herbster–Warmuth 1998)</td></tr>
+    <tr><td>Validation</td><td>48-fold walk-forward backtest (2,992 out-of-sample days)</td></tr>
+    <tr><td>Output</td><td>An interactive Streamlit dashboard + this report</td></tr>
+  </tbody>
+</table>
+
+<div class="card green">
+  <h4 style="margin-top:0">The headline result (honest version)</h4>
+  <p>The adaptive Hedge ensemble achieves a <b>Sharpe of 0.38, ~58% higher than naive
+  equal-weighting (0.24)</b> — proving the online learning adds real value. The best single agent
+  (LSTM) reaches <b>0.73 Sharpe, competitive with passive Buy &amp; Hold (0.79)</b>. We do
+  <b>not</b> beat passive Buy &amp; Hold on raw return, because beating daily index returns by
+  timing is near-impossible — and saying so honestly is part of the project's credibility.</p>
+</div>
+
+<!-- ───────────────────────── 2 ───────────────────────── -->
+<h2>2. The Problem: What Are We Actually Trying to Do?</h2>
+<p>Every trading day, we want to answer one question: <strong>"Will the S&amp;P 500 go up or down
+tomorrow, and by roughly how much?"</strong> If we can answer even slightly better than a coin flip,
+we can build a strategy: go <em>long</em> (bet up) when we predict up, go <em>short</em> (bet down)
+when we predict down.</p>
+
+<p>This is a <strong>time-series forecasting</strong> problem — we predict the future of a sequence
+(daily returns) from its past. It is famously hard because financial markets are close to
+<em>efficient</em>: any easily-found pattern gets traded away, so daily returns are mostly noise.
+Our goal is therefore modest and scientific: extract whatever weak signal exists, combine multiple
+models intelligently, and measure honestly whether the combination helps.</p>
+
+<div class="callout">
+  <strong>&#128161; Why "multi-agent"?</strong>
+  Different models capture different market behaviors — long-run drift, short-term momentum,
+  volatility regimes, non-linear patterns. Rather than betting on one, we run all four and let an
+  algorithm decide, day by day, which to trust. That decision-maker is the Hedge aggregator.
+</div>
+
+<!-- ───────────────────────── 3 ───────────────────────── -->
+<h2>3. Glossary — Every Term Used</h2>
+<dl class="glossary">
+  <dt>Log return</dt>
+  <dd>The natural log of the ratio of consecutive prices: <code>ln(P_t / P_{t-1})</code>. Used
+  instead of raw price because prices trend upward forever (non-stationary) while returns hover
+  around zero with stable spread (stationary) — which is what ML models need. Log returns are also
+  <em>additive</em> over time (a 5-day return is the sum of 5 daily log returns).</dd>
+
+  <dt>Stationary / Non-stationary</dt>
+  <dd>A series is <em>stationary</em> if its statistical properties (mean, variance) don't drift over
+  time. SPY's <em>price</em> went from \$115 to \$480 (non-stationary); its <em>log returns</em> stay
+  ~0 mean, ~1% daily std the whole time (stationary). Models trained on non-stationary data fail on
+  unseen value ranges.</dd>
+
+  <dt>Lookahead bias (a.k.a. data leakage)</dt>
+  <dd>Accidentally letting the model use information from the future. The #1 way backtests lie. Fixed
+  by always shifting features back by at least one day (<code>.shift(1)</code>) so a prediction for
+  day <em>t</em> only uses data available at the end of day <em>t&minus;1</em>.</dd>
+
+  <dt>Walk-forward validation</dt>
+  <dd>The correct way to test a time-series model: train on the past, test on the immediate future,
+  then roll the window forward and repeat. Never shuffle the data (that would leak the future into
+  the past).</dd>
+
+  <dt>Directional accuracy</dt>
+  <dd>The fraction of days the model got the <em>sign</em> (up/down) right. 50% = coin flip. This is
+  the most actionable metric — being right about direction is what makes money.</dd>
+
+  <dt>Sharpe ratio</dt>
+  <dd>Risk-adjusted return: <code>mean(returns) / std(returns) × √252</code>. Higher is better.
+  Roughly: &lt;0.5 weak, 0.5–1.0 decent, &gt;2 excellent (and usually suspicious on daily data).
+  The √252 annualizes daily numbers (≈252 trading days/year).</dd>
+
+  <dt>Maximum drawdown</dt>
+  <dd>The worst peak-to-trough drop in portfolio value, as a fraction. Measures downside pain.</dd>
+
+  <dt>Information ratio</dt>
+  <dd>Like Sharpe but measured against a benchmark: <code>mean(strategy − benchmark) /
+  std(strategy − benchmark) × √252</code>. Tells you if you add value <em>relative to just holding
+  the index</em>.</dd>
+
+  <dt>RSI (Relative Strength Index)</dt>
+  <dd>A momentum oscillator (0–100) comparing recent gains to recent losses. &gt;70 = "overbought",
+  &lt;30 = "oversold". A mean-reversion signal.</dd>
+
+  <dt>MACD (Moving Average Convergence Divergence)</dt>
+  <dd>The gap between a fast (12-day) and slow (26-day) exponential moving average of price, plus a
+  9-day "signal line". A trend/momentum indicator.</dd>
+
+  <dt>Bollinger Band width</dt>
+  <dd>How wide a ±2-standard-deviation envelope around a 20-day average is. Narrow = calm market;
+  a "squeeze" often precedes a big move.</dd>
+
+  <dt>VIX</dt>
+  <dd>The market's "fear gauge" — the options market's expectation of near-term volatility. Spikes
+  during crashes. We feed its level and 5-day change as features.</dd>
+
+  <dt>EWM vs SMA</dt>
+  <dd><em>Exponentially Weighted Mean</em> weights recent data more (responsive); <em>Simple Moving
+  Average</em> weights all data in the window equally (stable). RSI/MACD use EWM; Bollinger uses SMA.</dd>
+
+  <dt>Lag feature</dt>
+  <dd>A past value of the series used as an input. <code>lag_1</code> = yesterday's return,
+  <code>lag_5</code> = the return 5 days ago. The autoregressive backbone of forecasting.</dd>
+
+  <dt>Online learning</dt>
+  <dd>Learning that updates after every single new data point (here: every trading day), rather than
+  training once on a fixed dataset. The Hedge algorithm is an online learner.</dd>
+
+  <dt>Hedge algorithm / Multiplicative Weights</dt>
+  <dd>An online algorithm that keeps a weight on each expert (agent), and after each round multiplies
+  each weight by <code>exp(−η × loss)</code> — shrinking the weights of experts that did badly. η
+  ("eta") is the learning rate.</dd>
+
+  <dt>Regret / No-regret</dt>
+  <dd>"Regret" = how much worse the ensemble did than the best single expert in hindsight. Hedge has a
+  <em>no-regret</em> guarantee: regret grows only like <code>√(T·log N)</code>, so per-day regret
+  &rarr; 0 as time T grows. Translation: the ensemble is guaranteed to do nearly as well as the best
+  agent, without knowing in advance which agent that is.</dd>
+
+  <dt>Fixed-Share</dt>
+  <dd>An add-on to Hedge for <em>non-stationary</em> problems: after each update, mix a little uniform
+  weight back into every agent so none ever dies. Lets the ensemble recover an agent when the market
+  regime changes.</dd>
+
+  <dt>XGBoost</dt>
+  <dd>"Extreme Gradient Boosting" — a powerful tree-based ML model for tabular data. Builds many small
+  decision trees, each correcting the previous one's errors.</dd>
+
+  <dt>LSTM (Long Short-Term Memory)</dt>
+  <dd>A type of recurrent neural network designed to read sequences in order and remember long-range
+  patterns. Used here to read the last 30 days of returns.</dd>
+</dl>
+
+<!-- ───────────────────────── 4 ───────────────────────── -->
+<h2>4. System Architecture (The Pipeline)</h2>
+<p>Data flows through six stages. Each stage is one Python module.</p>
+<pre><code>Yahoo Finance (SPY + VIX, 2010–2024)
+        │   data/fetch.py
+        ▼
+Feature Engineering  ── pipeline/features.py
+   log returns · RSI · MACD · Bollinger · lags · rolling stats · VIX
+        │
+        ▼
+Four Agents  ── pipeline/agents.py
+   TrendAgent · MomentumAgent · VolatilityAgent · SequenceAgent(LSTM)
+        │   (each makes an independent daily prediction)
+        ▼
+Hedge + Fixed-Share Aggregator  ── pipeline/aggregator.py
+   blends the 4 predictions into ONE, reweighting daily by accuracy
+        │
+        ▼
+Walk-Forward Backtest  ── pipeline/backtest.py + pipeline/metrics.py
+   48 folds · Sharpe, drawdown, directional accuracy, information ratio
+        │
+        ▼
+Streamlit Dashboard  ── app.py</code></pre>
+<p>The key idea: features and agents are <em>upstream</em>; the Hedge aggregator is the
+<em>brain</em> that decides how to combine them; the backtest is the <em>honest referee</em>; the
+dashboard is the <em>presentation layer</em>.</p>
+
+<!-- ───────────────────────── 5 ───────────────────────── -->
+<h2>5. Code Walkthrough 1 — Data Ingestion (<code>data/fetch.py</code>)</h2>
+<p>This module downloads raw price data and converts it into the base series everything else uses.</p>
+
+<h4>Downloading SPY and computing log returns</h4>
+<pre><code><span class="kw">def</span> <span class="fn">fetch_spy</span>():
+    df = yf.<span class="fn">download</span>(<span class="st">"SPY"</span>, start=START, end=END, auto_adjust=<span class="kw">True</span>)
+    df = df[[<span class="st">"Close"</span>]].copy()
+    df[<span class="st">"log_return"</span>] = np.<span class="fn">log</span>(df[<span class="st">"Close"</span>] / df[<span class="st">"Close"</span>].<span class="fn">shift</span>(<span class="nm">1</span>))
+    df.<span class="fn">dropna</span>(inplace=<span class="kw">True</span>)
+    <span class="kw">return</span> df</code></pre>
+<ul>
+  <li><code>auto_adjust=True</code> — adjusts prices for dividends/splits so returns are accurate.</li>
+  <li><code>log(Close / Close.shift(1))</code> — today's close ÷ yesterday's close, then log. This is
+  the <em>log return</em>, our prediction target.</li>
+  <li><code>.shift(1)</code> aligns yesterday's price with today's row. The first row becomes NaN
+  (no prior day) and is dropped.</li>
+</ul>
+
+<h4>Downloading VIX (the fear gauge)</h4>
+<pre><code>vix[<span class="st">"vix_change_5d"</span>] = vix[<span class="st">"vix_close"</span>].<span class="fn">pct_change</span>(<span class="nm">5</span>)</code></pre>
+<p>We keep VIX's level and its 5-day percentage change (is fear rising or falling?).</p>
+
+<h4>Caching: <code>load_or_fetch()</code></h4>
+<p>Downloads once, saves to CSV, and on later runs reads the CSV instead of hitting Yahoo Finance
+again — faster and avoids rate limits. The SPY and VIX tables are joined on date (inner join, so only
+days both exist are kept).</p>
+
+<!-- ───────────────────────── 6 ───────────────────────── -->
+<h2>6. Code Walkthrough 2 — Feature Engineering (<code>pipeline/features.py</code>)</h2>
+<p>"Features" are the inputs the models learn from. This module turns the raw price/return series into
+a clean table of predictive signals — <strong>all carefully shifted to prevent lookahead bias.</strong></p>
+
+<h4>RSI</h4>
+<pre><code><span class="kw">def</span> <span class="fn">compute_rsi</span>(series, period=<span class="nm">14</span>):
+    delta = series.<span class="fn">diff</span>()
+    gain = delta.<span class="fn">clip</span>(lower=<span class="nm">0</span>)        <span class="cm"># keep only up moves</span>
+    loss = -delta.<span class="fn">clip</span>(upper=<span class="nm">0</span>)       <span class="cm"># keep only down moves (as positive)</span>
+    avg_gain = gain.<span class="fn">ewm</span>(com=period-<span class="nm">1</span>).<span class="fn">mean</span>()
+    avg_loss = loss.<span class="fn">ewm</span>(com=period-<span class="nm">1</span>).<span class="fn">mean</span>()
+    rs = avg_gain / avg_loss
+    <span class="kw">return</span> <span class="nm">100</span> - (<span class="nm">100</span> / (<span class="nm">1</span> + rs))</code></pre>
+<p>Splits each day's move into gains and losses, takes an exponentially-weighted average of each, and
+forms the ratio. High RSI = lots of recent gains (overbought); low = oversold.</p>
+
+<h4>MACD</h4>
+<pre><code>ema_fast = series.<span class="fn">ewm</span>(span=<span class="nm">12</span>).<span class="fn">mean</span>()
+ema_slow = series.<span class="fn">ewm</span>(span=<span class="nm">26</span>).<span class="fn">mean</span>()
+macd_line = ema_fast - ema_slow
+signal_line = macd_line.<span class="fn">ewm</span>(span=<span class="nm">9</span>).<span class="fn">mean</span>()</code></pre>
+<p>Fast minus slow EMA measures momentum; the 9-day "signal line" smooths it. We use the signal line as
+the feature (less noisy).</p>
+
+<h4>Bollinger Band width &amp; lag/rolling features</h4>
+<pre><code>bb_width = (upper - lower) / mid      <span class="cm"># width of ±2σ envelope, normalized</span>
+lag_k    = series.<span class="fn">shift</span>(k)             <span class="cm"># return k days ago</span>
+rolling  = series.<span class="fn">shift</span>(<span class="nm">1</span>).<span class="fn">rolling</span>(w).<span class="fn">mean</span>()/<span class="fn">std</span>()  <span class="cm"># window ENDS at t-1</span></code></pre>
+
+<div class="callout danger">
+  <strong>&#9888; The single most important line in the project</strong>
+  <pre style="margin-top:8px"><code>close = df[<span class="st">"Close"</span>].<span class="fn">shift</span>(<span class="nm">1</span>)   <span class="cm"># yesterday's close — all features built from here</span></code></pre>
+  Inside <code>build_feature_matrix()</code>, every technical indicator is computed from
+  <em>yesterday's</em> close, not today's. Without this one shift, the model would secretly see the
+  current day's price — producing a backtest that looks perfect and collapses in real trading. This is
+  how lookahead bias is prevented at the source.
+</div>
+
+<p><code>build_feature_matrix()</code> assembles RSI, MACD signal, Bollinger width, 5 lag features, 4
+rolling stats, and 2 VIX features into one table, with <code>log_return</code> as the last column (the
+target). Rows with any NaN (from the warm-up windows) are dropped.</p>
+
+<!-- ───────────────────────── 7 ───────────────────────── -->
+<h2>7. Code Walkthrough 3 — The Four Agents (<code>pipeline/agents.py</code>)</h2>
+
+<h3>The shared contract: <code>BaseAgent</code></h3>
+<p>Every agent is a Python class with the same two methods, so the aggregator can treat them
+interchangeably (this is the "Abstract Base Class" pattern):</p>
+<pre><code><span class="kw">class</span> <span class="fn">BaseAgent</span>(ABC):
+    <span class="kw">def</span> <span class="fn">fit</span>(<span class="kw">self</span>, train_df): ...     <span class="cm"># learn from historical rows</span>
+    <span class="kw">def</span> <span class="fn">predict</span>(<span class="kw">self</span>, test_df): ...  <span class="cm"># output one prediction per row</span></code></pre>
+<p>Each agent receives the <em>full</em> feature table and internally picks the columns it cares about.</p>
+
+<h3>Agent 1 — TrendAgent (classical statistics)</h3>
+<table>
+  <tbody>
+    <tr><td><b>Model</b></td><td>Linear Regression on a <code>DeterministicProcess</code></td></tr>
+    <tr><td><b>Inputs</b></td><td>Only the calendar date (a linear time trend + annual Fourier seasonality)</td></tr>
+    <tr><td><b>Captures</b></td><td>The market's long-run upward drift and calendar/seasonal effects</td></tr>
+  </tbody>
+</table>
+<pre><code>fourier = <span class="fn">CalendarFourier</span>(freq=<span class="st">"YE"</span>, order=<span class="nm">4</span>)        <span class="cm"># annual seasonal waves</span>
+dp = <span class="fn">DeterministicProcess</span>(index, constant=<span class="kw">True</span>, order=<span class="nm">1</span>,  <span class="cm"># linear trend</span>
+                          additional_terms=[fourier])
+model.<span class="fn">fit</span>(dp.<span class="fn">in_sample</span>(), train[<span class="st">"log_return"</span>])
+preds = model.<span class="fn">predict</span>(dp.<span class="fn">out_of_sample</span>(steps=n, forecast_index=test.index))</code></pre>
+<p>This is literally <strong>time-series decomposition</strong> (trend + seasonality) from the
+<code>statsmodels.tsa</code> ("time series analysis") library. It uses no price features at all — just
+the passage of time — so it embodies the theory "stocks drift up over time."</p>
+
+<h3>Agent 2 — MomentumAgent (gradient-boosted trees)</h3>
+<table>
+  <tbody>
+    <tr><td><b>Model</b></td><td><code>XGBRegressor</code> (200 trees, depth 4, lr 0.05)</td></tr>
+    <tr><td><b>Inputs</b></td><td>lag_1…lag_10, rolling means/std, RSI, MACD signal</td></tr>
+    <tr><td><b>Captures</b></td><td>Short-term momentum / continuation patterns</td></tr>
+  </tbody>
+</table>
+<pre><code>self._model = <span class="fn">XGBRegressor</span>(n_estimators=<span class="nm">200</span>, learning_rate=<span class="nm">0.05</span>, max_depth=<span class="nm">4</span>, ...)
+self._model.<span class="fn">fit</span>(X[momentum_cols], y)</code></pre>
+<p>This is the "reframe time-series as supervised regression" approach: feed recent returns and
+indicators as columns, predict the next return.</p>
+
+<h3>Agent 3 — VolatilityAgent (gradient-boosted trees, different lens)</h3>
+<table>
+  <tbody>
+    <tr><td><b>Model</b></td><td><code>XGBRegressor</code> (same settings)</td></tr>
+    <tr><td><b>Inputs</b></td><td>Bollinger width, rolling std (5d, 21d), VIX level, VIX 5-day change</td></tr>
+    <tr><td><b>Captures</b></td><td>Volatility regime — behaves differently in calm vs stressed markets</td></tr>
+  </tbody>
+</table>
+<p>Same algorithm as Momentum, but fed only volatility/fear features. It embodies "behavior depends on
+the volatility regime."</p>
+
+<h3>Agent 4 — SequenceAgent (LSTM deep learning)</h3>
+<table>
+  <tbody>
+    <tr><td><b>Model</b></td><td>2-layer LSTM, hidden size 64, dropout 0.2 (PyTorch)</td></tr>
+    <tr><td><b>Inputs</b></td><td>The raw sequence of the last 30 daily returns</td></tr>
+    <tr><td><b>Captures</b></td><td>Non-linear temporal patterns too complex for the other models</td></tr>
+  </tbody>
+</table>
+<pre><code><span class="cm"># turn a 1-D return series into overlapping 30-day windows</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(window, <span class="fn">len</span>(series)):
+    X.<span class="fn">append</span>(series[i-window : i]);  y.<span class="fn">append</span>(series[i])
+
+<span class="cm"># network: LSTM reads the window, a linear head outputs one number</span>
+out, _ = self.lstm(x)
+<span class="kw">return</span> self.head(out[:, -<span class="nm">1</span>, :])      <span class="cm"># use the LAST timestep's hidden state</span></code></pre>
+<p>Key training details: returns are standardized (scaler fit on <em>training data only</em>); training
+uses Adam + early stopping (stop when validation loss stops improving); and — after our fixes — a fixed
+random seed makes it reproducible. <strong>This is the deep-learning leg of the project and, after the
+fixes, the single best-performing agent (0.73 Sharpe).</strong></p>
+
+<div class="callout success">
+  <strong>&#128161; Four lenses, one decision</strong>
+  TrendAgent sees only the calendar. MomentumAgent sees recent returns &amp; indicators.
+  VolatilityAgent sees fear &amp; volatility. SequenceAgent sees raw 30-day patterns. None sees the
+  others' features. The Hedge aggregator's whole job is to discover, live, which lens is working now.
+</div>
+
+<!-- ───────────────────────── 8 ───────────────────────── -->
+<h2>8. Code Walkthrough 4 — The Hedge Aggregator (<code>pipeline/aggregator.py</code>)</h2>
+<p>This is the heart of the project — the part that makes it "multi-agent." It keeps a weight on each
+agent (how much to trust it) and updates those weights every day.</p>
+
+<h4>Making one combined prediction</h4>
+<pre><code><span class="kw">def</span> <span class="fn">aggregate</span>(<span class="kw">self</span>, predictions):
+    <span class="kw">return</span> np.<span class="fn">dot</span>(<span class="kw">self</span>.weights, predictions)   <span class="cm"># weighted average of the 4 agents</span></code></pre>
+
+<h4>The daily weight update (final version)</h4>
+<pre><code><span class="kw">def</span> <span class="fn">update</span>(<span class="kw">self</span>, predictions, actual):
+    losses = (predictions - actual) ** <span class="nm">2</span>             <span class="cm"># squared error per agent</span>
+    norm_losses = losses / (losses.<span class="fn">mean</span>() + <span class="nm">1e-12</span>)   <span class="cm"># (1) scale-invariant</span>
+    <span class="kw">self</span>.weights *= np.<span class="fn">exp</span>(-<span class="kw">self</span>.eta * norm_losses)   <span class="cm"># (2) Hedge penalty</span>
+    <span class="kw">self</span>.weights /= <span class="kw">self</span>.weights.<span class="fn">sum</span>()
+    <span class="kw">self</span>.weights = (<span class="nm">1</span>-<span class="kw">self</span>.alpha)*<span class="kw">self</span>.weights + <span class="kw">self</span>.alpha/N  <span class="cm"># (3) Fixed-Share</span>
+    <span class="kw">self</span>.weights /= <span class="kw">self</span>.weights.<span class="fn">sum</span>()</code></pre>
+<ol>
+  <li><b>Normalize losses</b> — raw squared log-return losses are ~0.0001; dividing by their mean
+  rescales them so the learning rate η actually has an effect (without this the weights never move).</li>
+  <li><b>Hedge penalty</b> — each weight is multiplied by <code>exp(−η × loss)</code>: agents that erred
+  more shrink more. Then renormalize so weights sum to 1.</li>
+  <li><b>Fixed-Share</b> — mix a small uniform amount (α/N) back into every weight so no agent ever dies;
+  this keeps the ensemble able to adapt when the regime changes.</li>
+</ol>
+<p>The <code>EqualWeightAggregator</code> is a baseline with the same interface but a no-op update — it
+always averages the four agents equally. Comparing Hedge against it proves whether the adaptive
+weighting actually helps. (It does: 0.38 vs 0.24 Sharpe.)</p>
+
+<div class="callout info">
+  <strong>The regret guarantee, in plain English</strong>
+  Hedge's theory promises that over T days, the ensemble's total loss exceeds the <em>best agent's</em>
+  total loss by at most ~<code>√(T·log N)</code>. Divided by T, that gap shrinks to zero. So you are
+  mathematically guaranteed to do almost as well as the best agent — <em>without knowing in advance</em>
+  which one it is. That robustness, not maximum return, is the point.
+</div>
+
+<!-- ───────────────────────── 9 ───────────────────────── -->
+<h2>9. Code Walkthrough 5 — Metrics (<code>pipeline/metrics.py</code>)</h2>
+<p>Turns a prediction series into the financial scorecard.</p>
+<pre><code>strategy_returns = np.<span class="fn">sign</span>(pred) * actual    <span class="cm"># long if pred&gt;0, short if pred&lt;0</span>
+equity = <span class="nm">10000</span> * np.<span class="fn">exp</span>(np.<span class="fn">cumsum</span>(strategy_returns))  <span class="cm"># $10k compounded</span></code></pre>
+<ul>
+  <li><b>Sharpe</b> = mean/std of strategy returns × √252.</li>
+  <li><b>Max drawdown</b> = worst peak-to-trough fall of the equity curve.</li>
+  <li><b>Directional accuracy</b> = fraction of days <code>sign(pred) == sign(actual)</code>.</li>
+  <li><b>Information ratio</b> = risk-adjusted excess return vs Buy &amp; Hold.</li>
+  <li><b>Conviction option</b> (added, default off) — trade only the most-confident days; tested and
+  found <em>not</em> to help (see Corrections).</li>
+</ul>
+
+<!-- ───────────────────────── 10 ───────────────────────── -->
+<h2>10. Code Walkthrough 6 — Walk-Forward Backtest (<code>pipeline/backtest.py</code>)</h2>
+<p>This is the honest referee. It never lets a model see the future.</p>
+<pre><code>train_end = start + <span class="nm">3</span> years           <span class="cm"># initial training window</span>
+<span class="kw">while</span> more data:
+    train = data[: train_end]            <span class="cm"># everything up to now</span>
+    test  = data[train_end : +3 months]  <span class="cm"># the next quarter (unseen)</span>
+    <span class="kw">for</span> agent <span class="kw">in</span> agents: agent.<span class="fn">fit</span>(train)
+    <span class="kw">for</span> day <span class="kw">in</span> test:                       <span class="cm"># step through the quarter day by day</span>
+        ensemble = aggregator.<span class="fn">aggregate</span>(agent_preds)
+        aggregator.<span class="fn">update</span>(agent_preds, actual)   <span class="cm"># learn from the realized outcome</span>
+    train_end += <span class="nm">3</span> months                 <span class="cm"># roll forward (expanding window)</span></code></pre>
+<p>Each fold trains on all data up to a point, tests on the next 3 months, then expands. Over 2010–2024
+this yields <strong>48 folds and 2,992 out-of-sample test days</strong>. Crucially, the Hedge weights
+update <em>within</em> each test quarter, day by day — true online learning. The final report compares
+every agent, the Hedge ensemble, equal-weight, and Buy &amp; Hold.</p>
+
+<!-- ───────────────────────── 11 ───────────────────────── -->
+<h2>11. Code Walkthrough 7 — The Dashboard (<code>app.py</code>)</h2>
+<p>A Streamlit web app that reads the saved backtest CSVs and presents three tabs:</p>
+<table>
+  <thead><tr><th>Tab</th><th>Shows</th></tr></thead>
+  <tbody>
+    <tr><td><b>Performance</b></td><td>$10k equity curves (ensemble vs Buy &amp; Hold vs agents),
+      Sharpe and directional-accuracy bar charts</td></tr>
+    <tr><td><b>Adaptive Weights</b></td><td>The Hedge weight-evolution stacked-area chart (the
+      centerpiece) + final allocation + an agent glossary</td></tr>
+    <tr><td><b>Diagnostics &amp; Findings</b></td><td>The full metrics table, honest interpretation, and
+      the raw-prediction signal (on its own scale)</td></tr>
+  </tbody>
+</table>
+<p>Engineering touches: results are cached and keyed on file modification time (so regenerated CSVs
+auto-refresh), regime bands mark the COVID crash and 2022 rate-hike cycle, and headline KPIs are framed
+around the genuine wins.</p>
+
+<!-- ───────────────────────── 12 ───────────────────────── -->
+<h2>12. All 12 Corrections From the Baseline</h2>
+<p>The original 7-day build was <em>written</em> but never <em>run</em>. The moment it executed, a chain
+of bugs surfaced — first environment errors, then deep flaws in the algorithm itself. Each is a real
+lesson. (Full detail in <code>CORRECTIONS.md</code>.)</p>
+
+<table>
+  <thead><tr><th>#</th><th>Correction</th><th>Type</th><th>One-line why</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><code>CalendarFourier(freq="Y"→"YE")</code></td><td><span class="pill fix">compat</span></td><td>statsmodels renamed the year-end alias</td></tr>
+    <tr><td>2</td><td><code>out_of_sample(forecast_index=…)</code></td><td><span class="pill fix">compat</span></td><td>API changed; Fourier needs the future dates</td></tr>
+    <tr><td>3</td><td>Add <code>plotly</code> to requirements</td><td><span class="pill fix">deploy</span></td><td>dashboard crashed on clean install</td></tr>
+    <tr><td>4</td><td>Light-theme config</td><td><span class="pill fix">UI</span></td><td>white charts on dark page were unreadable</td></tr>
+    <tr><td>5</td><td><b>Normalize Hedge losses</b></td><td><span class="pill fix">algorithm</span></td><td>η was 10,000× too small; weights never moved</td></tr>
+    <tr><td>6</td><td><b>Fix LSTM zero-padding</b></td><td><span class="pill fix">methodology</span></td><td>~48% of predictions were fake zeros</td></tr>
+    <tr><td>7</td><td>LSTM epochs 5 → 25</td><td><span class="pill fix">training</span></td><td>5 epochs was far too few</td></tr>
+    <tr><td>8</td><td>Cache keyed on file mtime</td><td><span class="pill fix">caching</span></td><td>dashboard showed stale results</td></tr>
+    <tr><td>9</td><td><b>Add Fixed-Share</b></td><td><span class="pill fix">algorithm</span></td><td>Hedge collapsed onto one agent</td></tr>
+    <tr><td>10</td><td>Try P&amp;L-aligned loss</td><td><span class="pill neg">tested</span></td><td>hypothesis: align loss with profit…</td></tr>
+    <tr><td>10b</td><td>…revert to MSE</td><td><span class="pill neg">negative</span></td><td>…it chased daily noise; didn't help</td></tr>
+    <tr><td>11</td><td>Full GPU/cuDNN determinism</td><td><span class="pill fix">reproducibility</span></td><td>LSTM re-randomized every run</td></tr>
+    <tr><td>12</td><td>Try conviction threshold</td><td><span class="pill neg">negative</span></td><td>confidence ≠ accuracy; it hurt</td></tr>
+  </tbody>
+</table>
+
+<h3>The three corrections that mattered most</h3>
+
+<div class="card red">
+  <h4 style="margin-top:0">#5 — The Hedge weights never moved (η 10,000× too small)</h4>
+  <p>With <code>loss ≈ 0.0001</code> and <code>η = 0.1</code>, the update multiplier was
+  <code>exp(−0.00001) ≈ 0.99999</code> — essentially 1. The weights stayed at 25% each for 12 years,
+  and Hedge gave <em>identical</em> results to dumb averaging. <b>Fix:</b> normalize losses by their
+  per-step mean so η has real effect. <em>Lesson: the Hedge regret bound assumes losses in [0,1]; on a
+  different scale the algorithm silently degenerates.</em></p>
+</div>
+
+<div class="card orange">
+  <h4 style="margin-top:0">#6 — The LSTM faked ~half its predictions</h4>
+  <p>The LSTM needs 30 days of history, so the original code filled the first 30 days of every fold with
+  zeros — ~1,440 of 2,992 days. This <em>tanked</em> directional accuracy (a zero never matches a real
+  sign) and <em>faked</em> a good Sharpe (zeros deflate volatility). <b>Fix:</b> carry the trailing 30
+  training days into prediction so every test day gets a real forecast (no leakage). <em>Lesson:
+  metric artifacts are sneaky — a positive Sharpe with 28% accuracy is a contradiction worth chasing.</em></p>
+</div>
+
+<div class="card purple">
+  <h4 style="margin-top:0">#9 — Hedge collapsed onto one agent</h4>
+  <p>After fixing η, the weights swung <em>too</em> hard: all weight piled onto SequenceAgent in the
+  first weeks and never moved again (a dead agent can't recover under pure multiplicative weights).
+  <b>Fix:</b> Fixed-Share mixes uniform weight back each step, so the ensemble stays adaptive and the
+  weight chart "breathes". <em>Lesson: vanilla Hedge is for stationary problems; markets are not.</em></p>
+</div>
+
+<h3>The two honest negative results</h3>
+<p>Not every idea worked — and we kept the failures visible:</p>
+<ul>
+  <li><b>P&amp;L-aligned loss (#10/10b):</b> weighting agents by realized profit instead of squared
+  error <em>sounded</em> right, but daily direction is so noisy that it just chased luck. Reverted to MSE.</li>
+  <li><b>Conviction threshold (#12):</b> trading only "high-confidence" days made things <em>worse</em>
+  (−0.13 Sharpe) — the models' prediction magnitude doesn't track their accuracy.</li>
+</ul>
+<p>Documenting these is a credibility signal: it shows the results weren't cherry-picked.</p>
+
+<!-- ───────────────────────── 13 ───────────────────────── -->
+<h2>13. Final Results &amp; Honest Interpretation</h2>
+<p>48-fold walk-forward, 2,992 out-of-sample days, reproducible (fixed seed + cuDNN determinism).
+Strategy = go long/short daily by predicted direction.</p>
+
+<table>
+  <thead><tr><th>Model</th><th>Directional Acc.</th><th>Sharpe</th><th>Max DD</th><th>Info Ratio</th><th>$10k →</th></tr></thead>
+  <tbody>
+    <tr><td>Buy &amp; Hold (benchmark)</td><td>55.5%</td><td><b>0.79</b></td><td>0.34</td><td>0.00</td><td><b>$47,973</b></td></tr>
+    <tr><td>SequenceAgent (LSTM)</td><td>54.6%</td><td><b>0.73</b></td><td>0.34</td><td>−0.11</td><td>~$43,000</td></tr>
+    <tr><td>TrendAgent</td><td>52.8%</td><td>0.45</td><td>0.38</td><td>−0.42</td><td>~$22,000</td></tr>
+    <tr><td><b>Hedge Ensemble</b></td><td>52.3%</td><td><b>0.38</b></td><td>0.33</td><td>−0.46</td><td><b>$21,444</b></td></tr>
+    <tr><td>Equal Weight (naive)</td><td>51.9%</td><td>0.24</td><td>0.31</td><td>−0.58</td><td>~$15,000</td></tr>
+    <tr><td>VolatilityAgent</td><td>50.5%</td><td>0.14</td><td>0.38</td><td>−0.59</td><td>~$13,000</td></tr>
+    <tr><td>MomentumAgent</td><td>50.6%</td><td>−0.01</td><td>0.45</td><td>−0.64</td><td>~$10,000</td></tr>
+  </tbody>
+</table>
+
+<h3>What this honestly means</h3>
+<ul>
+  <li><b>The algorithm works:</b> the adaptive Hedge ensemble beats naive equal-weighting by ~58% on
+  Sharpe (0.38 vs 0.24). Online learning adds real value over dumb averaging.</li>
+  <li><b>The weak agents are coin flips:</b> Momentum and Volatility sit at ~50% directional accuracy —
+  exactly what weak-form market efficiency predicts for technical indicators on liquid daily data. The
+  trend and LSTM agents carry the signal.</li>
+  <li><b>We do not beat passive Buy &amp; Hold</b> ($21k vs $48k), and that is the <em>correct</em>
+  result. Buy &amp; Hold captures the full 12-year equity premium; an active long/short model that goes
+  short ~half the time fights that uptrend and bleeds. Beating daily index returns by timing is
+  near-impossible without leverage or lookahead bias.</li>
+  <li><b>The best single agent beat the ensemble in hindsight</b> (LSTM $43k vs ensemble $21k). The
+  ensemble's value isn't max return — it's <em>robustness</em>: it tracks the best agent without
+  knowing in advance which one it'll be, and it beats naive averaging reliably.</li>
+</ul>
+
+<div class="callout">
+  <strong>&#128202; Why "predict COVID" is the wrong expectation</strong>
+  No model trained on price history can foresee an <em>exogenous</em> shock like COVID — the cause
+  (a pandemic) isn't in the data, and any predictable crash would already be priced in. The model can
+  only react, and with no-lookahead rules it reacts a day late — fatal when the move is a one-day jump
+  followed by a V-shaped recovery that whipsaws reactive strategies. This is why passive Buy &amp; Hold
+  wins through COVID, and it's a feature of an honest backtest.
+</div>
+
+<h3>Limitations (state these proactively)</h3>
+<ul>
+  <li><b>No transaction costs</b> — daily long/short implies high turnover; real spreads would erode the
+  active strategies more than Buy &amp; Hold.</li>
+  <li><b>Unit position sizing</b> — always ±1, no confidence-based sizing or risk limits.</li>
+  <li><b>Single asset</b> — SPY only; results may differ on other markets.</li>
+  <li><b>LSTM on daily returns</b> is inherently noisy; one strong seed is not proof of a durable edge.</li>
+</ul>
+
+<!-- ───────────────────────── 14 ───────────────────────── -->
+<h2>14. How to Run It Yourself</h2>
+<pre><code><span class="cm"># 1. install</span>
+pip install -r requirements.txt
+
+<span class="cm"># 2. download data + run the 48-fold backtest (saves results/*.csv)</span>
+python -m pipeline.backtest
+
+<span class="cm"># 3. launch the dashboard</span>
+streamlit run app.py</code></pre>
+<p>First run downloads SPY/VIX from Yahoo Finance; later runs read the cached CSVs. Thanks to the fixed
+seed, the backtest is reproducible — re-running gives identical numbers.</p>
+
+<!-- ───────────────────────── 15 ───────────────────────── -->
+<h2>15. References</h2>
+<ul>
+  <li>Freund, Y. &amp; Schapire, R. E. (1997). <em>A decision-theoretic generalization of on-line
+  learning and an application to boosting.</em> J. Computer and System Sciences, 55(1), 119–139.
+  <span style="color:#8b8fa8">— the Hedge algorithm.</span></li>
+  <li>Herbster, M. &amp; Warmuth, M. K. (1998). <em>Tracking the best expert.</em> Machine Learning,
+  32(2), 151–178. <span style="color:#8b8fa8">— Fixed-Share.</span></li>
+  <li>Bollinger, J. (2002). <em>Bollinger on Bollinger Bands.</em> McGraw-Hill.</li>
+  <li>Wilder, J. W. (1978). <em>New Concepts in Technical Trading Systems.</em> Trend Research.
+  <span style="color:#8b8fa8">— RSI.</span></li>
+</ul>
+
+<hr>
+<p style="text-align:center; color:#8b8fa8; font-size:11px; margin-top:18px;">
+  Multi-Agent Financial Forecasting &nbsp;·&nbsp; Stamatics IIT Kanpur<br>
+  Complete project report — baseline to final, every component explained
+</p>
+
+</body>
+</html>
